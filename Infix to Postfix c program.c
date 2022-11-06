@@ -10,24 +10,6 @@ typedef struct stack
     int top;
 }stack;
  
-int precedence(char);
-void init(stack *);
-int empty(stack *);
-int full(stack *);
-int pop(stack *);
-void push(stack *,int);
-int top(stack *);   //value of the top element
-void infix_to_postfix(char infix[],char postfix[]);
- 
-void main()
-{
-    char infix[30],postfix[30];
-    printf("Enter an infix expression(eg: 5+2*4): ");
-    gets(infix);
-    infix_to_postfix(infix,postfix);
-    printf("\nPostfix expression: %s",postfix);
-}
- 
 void infix_to_postfix(char infix[],char postfix[])
 {
     stack s;
@@ -41,22 +23,20 @@ void infix_to_postfix(char infix[],char postfix[])
         token=infix[i];
         if(isalnum(token))
             postfix[j++]=token;
-        else
-            if(token=='(')
+        else if(token=='(')
                push(&s,'(');
-        else
-            if(token==')')
+        else if(token==')')
                 while((x=pop(&s))!='(')
                       postfix[j++]=x;
-                else
-                {
+        else
+             {
                     while(precedence(token)<=precedence(top(&s))&&!empty(&s))
                     {
                         x=pop(&s);
                         postfix[j++]=x;
                     }
                     push(&s,token);
-                }
+             }
     }
  
     while(!empty(&s))
@@ -87,18 +67,18 @@ void init(stack *s)
  
 int empty(stack *s)
 {
-    if(s->top==-1)
-        return(1);
+   if(s->top!=-1)
+        return(0);
  
-    return(0);
+   return(1);
 }
  
 int full(stack *s)
 {
-    if(s->top==MAX-1)
-        return(1);
+    if(s->top!=MAX-1)
+        return(0);
  
-    return(0);
+    return(1);
 }
  
 void push(stack *s,int x)
@@ -118,4 +98,13 @@ int pop(stack *s)
 int top(stack *p)
 {
     return (p->data[p->top]);
+}
+ 
+void main()
+{
+    char infix[30],postfix[30];
+    printf("Enter an infix expression(eg: 5+2*4): ");
+    gets(infix);
+    infix_to_postfix(infix,postfix);
+    printf("\nPostfix expression: %s",postfix);
 }
